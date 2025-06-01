@@ -2,13 +2,17 @@ import React, { useState, useEffect } from 'react'
 import { Heart, Star } from 'lucide-react'
 import Footer from '../components/Footer'
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 
 export default function Men() {
   const [liked, setLiked] = useState({})
-  const menProducts = useSelector(state =>
-    state.dataSlice.products.filter(item => item.gender === 'male')
-  )
+  const menProducts = useSelector(state => {
+    const products = state.dataSlice?.products || [];
+    return Array.isArray(products)
+      ? products.filter(item => item.gender === 'male')
+      : [];
+  })
+
 
   // LocalStorage'dan like holatini olish
   useEffect(() => {
@@ -33,7 +37,7 @@ export default function Men() {
           <h2 className="text-3xl font-bold text-blue-700 mb-10 text-center tracking-tight">Erkaklar uchun mahsulotlar</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
             {menProducts.map((product) => (
-              <Link
+              <NavLink
                 to={`/detail/${product.slug}`}
                 key={product.id}
                 className="relative bg-white z-10 rounded-3xl  shadow-xl hover:shadow-blue-100 transition-shadow duration-300 flex flex-col overflow-hidden border border-blue-100 group"
@@ -81,7 +85,7 @@ export default function Men() {
                     {product.rating}
                   </span>
                 </div>
-              </Link>
+              </NavLink>
             ))}
           </div>
         </div>
