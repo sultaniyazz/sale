@@ -2,17 +2,17 @@ import React, { useState, useEffect } from 'react'
 import { Heart, Star } from 'lucide-react'
 import Footer from '../components/Footer'
 import { useSelector } from 'react-redux'
-import { Link, NavLink } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 
 export default function Men() {
   const [liked, setLiked] = useState({})
-  const menProducts = useSelector(state => {
-    const products = state.dataSlice?.products || [];
-    return Array.isArray(products)
-      ? products.filter(item => item.gender === 'male')
-      : [];
-  })
 
+  // Redux'dan dataSlice ni olish
+  const { products = [], loading } = useSelector(state => state.dataSlice)
+
+  const menProducts = Array.isArray(products)
+    ? products.filter(item => item.gender === 'male')
+    : []
 
   // LocalStorage'dan like holatini olish
   useEffect(() => {
@@ -29,6 +29,15 @@ export default function Men() {
     setLiked((prev) => ({ ...prev, [id]: !prev[id] }))
   }
 
+  // 🔄 Yuklanayotgan holat
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <span className="text-xl font-semibold text-blue-600 animate-pulse">Yuklanmoqda...</span>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen flex flex-col justify-between">
       <div className="relative flex-1 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 w-full">
@@ -40,9 +49,9 @@ export default function Men() {
               <NavLink
                 to={`/detail/${product.slug}`}
                 key={product.id}
-                className="relative bg-white z-10 rounded-3xl  shadow-xl hover:shadow-blue-100 transition-shadow duration-300 flex flex-col overflow-hidden border border-blue-100 group"
+                className="relative bg-white z-10 rounded-3xl shadow-xl hover:shadow-blue-100 transition-shadow duration-300 flex flex-col overflow-hidden border border-blue-100 group"
               >
-                {/* Like button */}
+                {/* Like tugmasi */}
                 <button
                   type="button"
                   onClick={e => {
@@ -58,7 +67,8 @@ export default function Men() {
                     fill={liked[product.id + product.name] ? 'currentColor' : 'none'}
                   />
                 </button>
-                {/* Product image */}
+
+                {/* Mahsulot rasmi */}
                 <div className="bg-gradient-to-t from-blue-10 via-white to-white p-5 pb-0 flex items-center justify-center">
                   <img
                     alt={product.name}
@@ -66,7 +76,8 @@ export default function Men() {
                     className="w-full h-60 object-contain rounded-2xl drop-shadow-md group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
-                {/* Product info */}
+
+                {/* Mahsulot ma’lumotlari */}
                 <div className="flex-1 flex flex-col justify-between p-6 pt-4">
                   <h3 className="text-lg font-bold text-gray-900 mb-1 truncate">{product.name}</h3>
                   <p className="text-sm text-gray-500 mb-2 line-clamp-2">{product.description}</p>
@@ -77,7 +88,8 @@ export default function Men() {
                     </span>
                   </div>
                 </div>
-                {/* Brand & rating bar */}
+
+                {/* Brend va reyting */}
                 <div className="flex items-center justify-between px-6 py-3 border-t bg-blue-10">
                   <span className="text-sm font-medium text-gray-600">{product.brand}</span>
                   <span className="text-sm flex items-center gap-1 text-blue-10 font-semibold">
