@@ -8,8 +8,11 @@ export default function Women() {
   const [liked, setLiked] = useState({})
 
   const womenProducts = useSelector(state =>
-    state.dataSlice.products.filter(item => item.gender === 'female')
+    Array.isArray(state.dataSlice?.products)
+      ? state.dataSlice.products.filter(item => item.gender === 'female')
+      : []
   )
+
 
   // LocalStorage'dan like holatini olish
   useEffect(() => {
